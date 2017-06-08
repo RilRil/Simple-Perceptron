@@ -1,5 +1,5 @@
-const canvasW = 500;
-const canvasH = 500;
+const canvasW = 400;
+const canvasH = 400;
 
 let trainingPoints = [];
 let brain = null;
@@ -8,7 +8,7 @@ let w0 = 0;
 let w1 = 0;
 
 function f(x) {
-	return x;
+	return 0.5 * x + 100;
 }
 
 function setup() {
@@ -19,39 +19,50 @@ function setup() {
 	w1 = brain.weights[1];
 	console.log('cyril -- weights are ', w0, w1);
 
-	for (let i = 0; i < 10000; i++) {
-		trainingPoints.push(new Point(random(canvasW), random(canvasH), f));
+	for (let i = 0; i < 5000; i++) {
+		trainingPoints.push(new Point(random(10, canvasW-10), random(10, canvasH-10), f));
 	}
 
 	show();
-
 	displayPercentage();
-
-}
-
-function draw() {
-
 }
 
 function show() {
 	background(235);
 	fill(0);
 	trainingPoints.forEach(function(point) {
-		// let guess = brain.guess([point.x, point.y]);
-		// point.color = brain.getColor(guess);
+		let guess = brain.guess([point.x, point.y]);
+		point.color = brain.getColor(guess);
 		point.show();
 	});
 
 	stroke(3);
 	strokeWeight(3);
-	for (let x = 0; x < canvasW; x++) {
-		point(x, f(x));
+	line(0, f(0), canvasW, f(canvasW));
+}
+
+var letstrain = false;
+function draw() {
+	if (letstrain) {
+		brain.trainAll(trainingPoints);
+		let x1 = 0;
+		let y1 = (-brain.weights[2] - brain.weights[0]*x1)/brain.weights[1];
+		let x2 = canvasW;
+		let y2 = (-brain.weights[2] - brain.weights[0]*x2)/brain.weights[1];
+		show();
+		stroke(100);
+		strokeWeight(2);
+		line(x1, y1, x2, y2);
 	}
+
 }
 
 function keyTyped() {
+	if (key === 'c') {
+		letstrain = !letstrain;
+	}
 	if (key === ' ') {
-		brain.train(trainingPoints);
+		brain.trainAll(trainingPoints);
 		if (brain.weights[0] === w0 && brain.weights[1] === w1) {
 			console.log('cyril -- Yeah ');
 		} else {
@@ -61,10 +72,10 @@ function keyTyped() {
 		show();
 		displayPercentage();
 	}
-	if (key === 's') {
-		for (let i = 0; i < 30; i++) {
+	if (key === 'ssads') {
+		for (let i = 0; i < 100; i++) {
 			console.log('cyril -- Training ', i);
-			brain.train(trainingPoints);
+			brain.trainAll(trainingPoints);
 			if (brain.weights[0] === w0 && brain.weights[1] === w1) {
 				console.log('cyril -- Yeah ');
 				break;
@@ -73,6 +84,7 @@ function keyTyped() {
 				w1 = brain.weights[1];
 			}
 			show();
+
 		}
 		// displayPercentage();
 	}
@@ -81,7 +93,7 @@ function keyTyped() {
 
 function displayPercentage() {
 	let good = 0;
-	let iterations = 1000;
+	let iterations = 10000;
 	for (let i = 0; i < iterations; i++) {
 		let pt = new Point(random(canvasW), random(canvasH), f);
 		let guess = brain.guess([pt.x, pt.y]);

@@ -13,6 +13,6 @@ class Point {
 	show() {
 		noStroke();
 		fill(this.color);
-		ellipse(this.x, this.y, 5, 5);
+		ellipse(this.x, this.y, 3, 3);
 	}
 }

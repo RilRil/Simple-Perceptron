@@ -13,13 +13,9 @@ class Perceptron {
 		point.color = this.getColor(guess);
 		let error = point.class - guess; // can be 0, -2 or +2
 		if (error !== 0) {
-			const self = this;
-			this.weights.forEach(function(weight, idx) {
-				if (idx === 2) {
-					weight += error;
-				}
-				weight += error * point.x * self.learningRate;
-			});
+			this.weights[0] += error * point.x * this.learningRate;
+			this.weights[1] += error * point.y * this.learningRate;
+			this.weights[2] += error * this.learningRate;
 		}
 	}
 
@@ -35,7 +31,6 @@ class Perceptron {
 				self.weights[2] += error * self.learningRate;
 			}
 		});
-		console.log('cyril -- weights are ', this.weights);
 	}
 
 	guess(inputs) {

@@ -49,9 +49,9 @@ function show() {
 
 	displayGuessedLine();
 	if (showPercentage) {
-		displayPercentage();	
+		displayPercentage();
 	}
-	
+
 }
 
 
@@ -59,9 +59,9 @@ let tick = 0;
 function draw() {
 	if (tick == 10) {
 		pFrameRate.html(nfc(frameRate(), 0));
-		tick = 0;	
+		tick = 0;
 	}
-	
+
 	if (letstrain) {
 		brain.trainAll(trainingPoints);
 		show();
@@ -85,7 +85,7 @@ function onClickOnTrainButton() {
 }
 function onClickOnShowPercentButton() {
 	showPercentage = !showPercentage;
-	button2.html((showPercentage ? 'Hide' : 'Show') + ' training');
+	button2.html((showPercentage ? 'Hide' : 'Show') + ' percentage');
 }
 
 function keyTyped() {

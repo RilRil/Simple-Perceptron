@@ -1,7 +1,7 @@
 class Perceptron {
 	constructor() {
 		this.weights = [0, 0, 0];
-		this.learningRate = 0.01;
+		this.learningRate = 0.005;
 
 		for (let i = 0; i < this.weights.length; i++) {
 			this.weights[i] = random(-1, 1);
@@ -15,7 +15,7 @@ class Perceptron {
 		if (error !== 0) {
 			this.weights[0] += error * point.x * this.learningRate;
 			this.weights[1] += error * point.y * this.learningRate;
-			this.weights[2] += error * this.learningRate;
+			this.weights[2] += error * this.learningRate
 		}
 	}
 

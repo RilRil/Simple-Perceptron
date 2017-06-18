@@ -9,9 +9,8 @@ let brain = null;
 let letstrain = false;
 let showPercentage = false;
 
-
 function f(x) {
-	return -0.1 * x + 180;
+	return 2 * x + 50;
 }
 
 function setup() {
@@ -28,7 +27,7 @@ function setup() {
 	pFrameRate = createP('');
 
 	for (let i = 0; i < 2000; i++) {
-		trainingPoints.push(new Point(random(10, canvasW-10), random(10, canvasH-10), f));
+		trainingPoints.push(new Point(random(-(canvasW / 2), canvasW / 2), random(-(canvasH / 2), canvasH / 2), f));
 	}
 
 	show();
@@ -36,28 +35,29 @@ function setup() {
 
 function show() {
 	background(235);
+	translate(canvasW / 2, canvasH / 2);
+
 	fill(0);
-	trainingPoints.forEach(function(point) {
+	for (let i = 0; i < 500; i++) {
+		let point = trainingPoints[i];
 		let guess = brain.guess([point.x, point.y]);
 		point.color = brain.getColor(guess);
 		point.show();
-	});
+	}
 
 	stroke(3);
 	strokeWeight(3);
-	line(0, f(0), canvasW, f(canvasW));
+	line(-(canvasW / 2), f(-(canvasW / 2)), canvasW / 2, f(canvasW / 2));
 
 	displayGuessedLine();
 	if (showPercentage) {
 		displayPercentage();
 	}
-
 }
-
 
 let tick = 0;
 function draw() {
-	if (tick == 10) {
+	if (tick === 10) {
 		pFrameRate.html(nfc(frameRate(), 0));
 		tick = 0;
 	}
@@ -70,10 +70,10 @@ function draw() {
 }
 
 function displayGuessedLine() {
-	let x1 = 0;
-	let y1 = (-brain.weights[2] - brain.weights[0]*x1)/brain.weights[1];
-	let x2 = canvasW;
-	let y2 = (-brain.weights[2] - brain.weights[0]*x2)/brain.weights[1];
+	let x1 = -(canvasW / 2);
+	let y1 = (-brain.weights[2] - brain.weights[0] * x1) / brain.weights[1];
+	let x2 = canvasW / 2;
+	let y2 = (-brain.weights[2] - brain.weights[0] * x2) / brain.weights[1];
 	stroke(100);
 	strokeWeight(2);
 	line(x1, y1, x2, y2);
@@ -108,11 +108,14 @@ function displayPercentage() {
 		}
 	}
 	let percentage = good / iterations * 100;
+	let xP = -(canvasW / 2) + 5;
+	let yP = canvasH / 2 - 55;
+
 	fill(255);
-	rect(10, 15, 150, 50);
+	rect(xP, yP, 150, 50);
 	fill(0);
 	stroke(0);
 	strokeWeight(2);
 	textSize(32);
-	text(nfc(percentage, 2) + '%', 20, 50);
+	text(nfc(percentage, 2) + '%', xP + 5, yP + 35);
 }
